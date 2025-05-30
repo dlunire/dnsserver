@@ -27,3 +27,10 @@ sudo apt install virtualbox
 ### Instalación en otros sistemas operativos
 
 Si estás utilizando Windows, macOS u otra distribución de Linux, puedes descargar VirtualBox directamente desde su [sitio web oficial](https://www.oracle.com/virtualization/technologies/vm/downloads/virtualbox-downloads.html "Descargar VirtualBox").
+
+## Creación de la máquina virtual
+
+Ahora que has instalado el software de virtualización siguiendo los pasos anteriores, se procede a crear las máquinas virtuales para poder instalar Ubuntu Server en ella.
+
+### Creación de la máquina virtual «**`Servidor DNS`**»
+
