@@ -13,3 +13,13 @@ Para la creación de los servidores, se empleará el software de virtualización
 * [Pasos previos a la instalación y configuración de los servidores](./preview.md "Primeros pasos antes de la instalación")
 * [Instalación y configuración del servidor DNS (guía paso a paso)](./Servidor%20DNS/Servidor%20DNS.md "Guía detallada del servidor DNS")
 * [Instalación y configuración del servidor Web (guía paso a paso)](./Servidor%20Web/Servidor%20Web.md "Guía detallada del servidor Web")
+
+
+## Autor:
+
+- David E Luna M
+
+## Proyectos:
+
+- Códigos del Futuro (@cdelfuturo)
+- DLUnire Framework
