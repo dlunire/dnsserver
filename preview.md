@@ -18,6 +18,8 @@ Antes de proceder con la creación de los servidores, es necesario instalar un s
 
 ### Instalación en sistemas basados en Debian (como Ubuntu)
 
+Escriba el siguiente comando en la terminal para instalar el software de virtualización:
+
 ```bash
 sudo apt install virtualbox
 ```
