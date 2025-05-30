@@ -1,5 +1,7 @@
 # Primeros pasos antes de la instalación de los servidores
 
+[← Volver al índice principal](../Readme.md "Ir al contenido principal")
+
 Antes de iniciar el proceso de instalación, es fundamental contar con una imagen del sistema operativo diseñado específicamente para entornos de servidor: **Ubuntu Server**.
 
 Puedes descargar la versión más reciente desde su [sitio web oficial](https://ubuntu.com/download/server "Descargar Ubuntu Server").
