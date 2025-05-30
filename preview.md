@@ -10,8 +10,6 @@ Puedes descargar la versión más reciente desde su [sitio web oficial](https://
 >
 > Todos los procedimientos descritos, incluyendo la configuración de los servidores DNS y Web, han sido realizados sobre esta distribución.
 
----
-
 ## Creación de las máquinas virtuales
 
 Antes de proceder con la creación de los servidores, es necesario instalar un software de virtualización que nos permita generar máquinas virtuales independientes para cada servicio.
