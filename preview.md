@@ -1,6 +1,6 @@
 # Primeros pasos antes de la instalación de los servidores
 
-[← Volver al índice principal](../Readme.md "Ir al contenido principal")
+[← Volver al índice principal](./Readme.md "Ir al contenido principal")
 
 Antes de iniciar el proceso de instalación, es fundamental contar con una imagen del sistema operativo diseñado específicamente para entornos de servidor: **Ubuntu Server**.
 
