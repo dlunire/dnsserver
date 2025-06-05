@@ -85,3 +85,5 @@ Debemos seguir las instrucciones que indican el paso a paso de cómo crear la m�
     ```bash
     sudo apt upgrade -y
     ```
+
+En las otras secciones se procederá a instalar los servicios necesarios para el servidor DNS y el servidor web.
