@@ -54,7 +54,7 @@ Debemos seguir las instrucciones que indican el paso a paso de cómo crear la m�
     Presione «Siguiente»
 
 - Paso 4: Asigne el amacenamiento adecuado
-    ![Asignación de almacenamiento](./images/server-name-storage-assign.png "Asignación de capacidad de almacenamiento en el disco virtual).
+    ![Asignación de almacenamiento](./images/server-name-storage-assign.png "Asignación de almacenamiento")
 
     Presiones «Siguiente» y luego en «Terminar»
 
