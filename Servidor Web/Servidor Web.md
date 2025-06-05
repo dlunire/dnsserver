@@ -1,7 +1,3 @@
-Aquí tienes la versión mejorada, con una redacción más clara, técnica y profesional, manteniendo el tono formal y en pasado como indicaste:
-
----
-
 # Guía de Instalación del Servidor Web en Ubuntu Server 25.04
 
 Esta guía documenta de forma detallada los pasos que se llevaron a cabo para instalar y configurar un servidor Web en un entorno basado en **Ubuntu Server 25.04**.
