@@ -68,13 +68,20 @@ Debemos seguir las instrucciones que indican el paso a paso de cómo crear la m�
 
     Presione «Iniciar»
 
-- Paso 7: Inicie la instalación del sistema operativo
+- Paso 7: Inicie la instalación del sistema operativo.
+
     ![Iniciar la instalación del sistema operativo](./images/23.png "Iniciar la instalación del sistema operativo")
 
-    Presione «Instalar ahora»
+    Seleccione «Try or Install Ubuntu Server» y siga las instrucciones del programa de instalación del sistema.
 
 - Paso 8: Una vez finalizada la instalación, procedemos a escribir el siguiente comando en la terminal para actualizar el sistema operativo:
 
     ```bash
     sudo apt update
+    ```
+
+    Y luego:
+
+    ```bash
+    sudo apt upgrade -y
     ```
