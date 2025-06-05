@@ -18,3 +18,23 @@ Antes de comenzar a configurar el servidor DNS, es necesario instalar los servic
 sudo apt install bind9 dnsutils
 ```
 
+## Configuración del servidor DNS
+
+Después de completar la instalación indicados en el paso anterior, procedemos a configurar el servidor DNS. El primer paso es agregar una zona DNS para el dominio que queremos configurar.
+
+Para ello, escribimos el siguiente comando en la terminal para editar el archivo `named.conf.local`:
+
+```bash
+sudo vi /etc/bind/named.conf.local
+```
+
+Y luego agregamos la siguiente línea al archivo:
+
+```bash
+zone "daniel-alarmas.com" {
+    type master;
+    file "/etc/bind/zones/db.daniel-alarmas.com";
+};
+```
+
+Guardamos el archivo y salimos del editor. Pero para hacerlo, presionamos la tecla `ESC` y luego escribimos `:wq`.
