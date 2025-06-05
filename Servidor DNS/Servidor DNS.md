@@ -38,3 +38,49 @@ zone "daniel-alarmas.com" {
 ```
 
 Guardamos el archivo y salimos del editor. Pero para hacerlo, presionamos la tecla `ESC` y luego escribimos `:wq`.
+
+### Configuración de la zona DNS
+
+Ahora, procedamos a crear la zona DNS creando el archio `db.daniel-alarmas.com`, pero antes creamos el directorio `zones` en la ruta `/etc/bind/`:
+
+```bash
+sudo mkdir zones
+```
+
+Y luego, creamos el archivo `db.daniel-alarmas.com` dentro del directorio `zones`:
+
+```bash
+cd zone;
+touch db.daniel-alarmas.com
+```
+
+Luego de haber creado el archivo, procedamos a abrirlo:
+
+```bash
+sudo vi /etc/bind/zones/db.daniel-alarmas.com
+```
+
+Y agregue las siguientes líneas en el archivo presionando las teclas <key>Ctrl</key> + <key>Shift</key> + <key>V</key>:
+
+```bash
+$TTL   300
+@       IN      SOA     ns1.daniel-alarmas.com. admin.daniel-alarmas.com. (
+                          2025052601 ; Serial (formato AAAAMMDDnn)
+                          3600       ; Refresh each hour
+                          86400      ; Retry
+                          2419200    ; Expire
+                          300 )   ; Negative Cache TTL
+
+; Dirección IP asignada al dominio:
+@	IN	A	192.168.56.200
+
+; Servidor DNS
+@       IN      NS      ns1.daniel-alarmas.com.
+
+; Registros A
+ns1     IN      A       192.168.56.150
+www     IN      A       192.168.56.200
+api     IN      A       192.168.56.200
+tienda	IN	CNAME	daniel-alarmas.com.
+```
+
