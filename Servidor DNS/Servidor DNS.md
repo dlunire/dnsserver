@@ -63,24 +63,46 @@ sudo vi /etc/bind/zones/db.daniel-alarmas.com
 Y agregue las siguientes líneas en el archivo presionando las teclas <key>Ctrl</key> + <key>Shift</key> + <key>V</key>:
 
 ```bash
-$TTL   300
-@       IN      SOA     ns1.daniel-alarmas.com. admin.daniel-alarmas.com. (
-                          2025052601 ; Serial (formato AAAAMMDDnn)
-                          3600       ; Refresh each hour
-                          86400      ; Retry
-                          2419200    ; Expire
-                          300 )   ; Negative Cache TTL
+$TTL 300
+; Tiempo de vida (TTL) por defecto de los registros DNS: 300 segundos (5 minutos)
 
-; Dirección IP asignada al dominio:
-@	IN	A	192.168.56.200
+@ IN SOA ns1.daniel-alarmas.com. admin.daniel-alarmas.com. (
+    2025052601 ; Número de serie (formato AAAAMMDDnn — cambia con cada modificación)
+    3600       ; Tiempo de refresco del secundario (1 hora)
+    86400      ; Tiempo de reintento si falla el refresco (24 horas)
+    2419200    ; Tiempo de expiración si no se puede contactar al primario (28 días)
+    300        ; TTL para respuestas negativas (no existe el dominio)
+)
 
-; Servidor DNS
-@       IN      NS      ns1.daniel-alarmas.com.
+; -------------------------------------------------------------------------------------
+; Registros principales del dominio daniel-alarmas.com
+; -------------------------------------------------------------------------------------
 
-; Registros A
-ns1     IN      A       192.168.56.150
-www     IN      A       192.168.56.200
-api     IN      A       192.168.56.200
-tienda	IN	CNAME	daniel-alarmas.com.
+; Dirección IP principal asignada al dominio raíz
+@ IN A 192.168.56.200
+
+; Servidor DNS autorizado (registro NS)
+@ IN NS ns1.daniel-alarmas.com.
+
+; -------------------------------------------------------------------------------------
+; Registros A (direcciones IPv4 para subdominios)
+; -------------------------------------------------------------------------------------
+
+; Dirección IP del servidor DNS primario
+ns1 IN A 192.168.56.150
+
+; Subdominio www apuntando a la IP principal del dominio
+www IN A 192.168.56.200
+
+; Subdominio api apuntando a la misma IP que el dominio principal
+api IN A 192.168.56.200
+
+; -------------------------------------------------------------------------------------
+; Registro CNAME (alias)
+; -------------------------------------------------------------------------------------
+
+; Subdominio tienda redirige a daniel-alarmas.com como alias
+tienda IN CNAME daniel-alarmas.com.
+
 ```
 
