@@ -1,20 +1,12 @@
-Claro, a continuación te presento la **versión mejorada de la guía**, conservando todos los pasos originales pero explicando cada uno con mayor claridad técnica y profesional, especialmente para su presentación ante una institución. Además, he incluido la **configuración de red mediante Netplan**, la cual es indispensable para garantizar que el servidor DNS funcione de manera estable con IP estática.
+# 🖧 Guía de instalación paso a paso del servidor DNS
 
----
-
-# 🖧 Guía Profesional de Instalación y Configuración de un Servidor DNS con BIND9 en Ubuntu Server
-
-Esta guía detalla paso a paso cómo instalar y configurar un servidor DNS en un entorno Ubuntu Server, utilizando el servicio **BIND9**. Cada paso incluye explicaciones técnicas claras orientadas a entornos educativos o institucionales.
-
-📎 [← Volver al índice principal](../Readme.md "Ir al contenido principal")
-
----
+Esta guía documenta detalladamente el procedimiento que se llevó a cabo para instalar y configurar un **servidor DNS** utilizando el software **BIND9**, una herramienta robusta y ampliamente utilizada para la gestión de zonas y registros DNS en entornos `Linux`.
 
 ## 1. Requisitos Previos
 
 Antes de comenzar con la instalación del servidor DNS, se deben cumplir los siguientes requisitos:
 
-* Un servidor Ubuntu instalado (preferiblemente una versión LTS como Ubuntu Server 20.04 o 22.04).
+* Un servidor Ubuntu instalado (se utilizó `Ubuntu Server 25.04`).
 * Acceso administrativo con privilegios `sudo`.
 * Conectividad básica de red funcional.
 
@@ -22,13 +14,11 @@ Antes de comenzar con la instalación del servidor DNS, se deben cumplir los sig
 
 🔗 [Pasos previos a la instalación y configuración de los servidores](./preview.md "Primeros pasos antes de la instalación")
 
----
-
 ## 2. Configuración de Red con Netplan
 
 Para garantizar que el servidor DNS sea accesible desde otras máquinas de la red, es necesario asignarle una IP estática en una de sus interfaces. Esto se realiza mediante Netplan, el sistema de configuración de red predeterminado en `Ubuntu Server`.
 
-1. Se abrió el archivo de configuración de `Netplan` (la ruta podría variar en función de la versión de Ubuntu). Se utilizó Ubuntu Server 25.04.
+1. Se abrió el archivo de configuración de `Netplan` (la ruta podría variar en función de la versión de Ubuntu). Se utilizó `Ubuntu Server 25.04`.
 
     ```bash
     sudo vi /etc/netplan/50-cloud-init.yaml
