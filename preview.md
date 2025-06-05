@@ -59,4 +59,22 @@ Debemos seguir las instrucciones que indican el paso a paso de cómo crear la m�
     Presiones «Siguiente» y luego en «Terminar»
 
 - Paso 5: Asigne la imagen de disco (ISO del Sistema Operativo) a la máquina virtual
-    ![Asignación de ISO para la instalación del sistema operativo]()
+    ![Asignación de ISO para la instalación del sistema operativo](./images/21.png "Asignación de ISO para la instalación del sistema operativo")
+
+    Presione «Aceptar»
+
+- Paso 6: Inicie la máquina virtual
+    ![Iniciar la máquina virtual](./images/22.png "Iniciar la máquina virtual")
+
+    Presione «Iniciar»
+
+- Paso 7: Inicie la instalación del sistema operativo
+    ![Iniciar la instalación del sistema operativo](./images/23.png "Iniciar la instalación del sistema operativo")
+
+    Presione «Instalar ahora»
+
+- Paso 8: Una vez finalizada la instalación, procedemos a escribir el siguiente comando en la terminal para actualizar el sistema operativo:
+
+    ```bash
+    sudo apt update
+    ```
