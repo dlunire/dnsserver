@@ -1,34 +1,47 @@
-# Instalación y configuración del servidor DNS (guía paso a paso)
+# Guía de Instalación y Configuración de un Servidor DNS en Ubuntu Server
 
-A continuación, se detallan los pasos seguidos para instalar y configurar un servidor DNS de forma estructurada y funcional.
+Esta guía describe, de forma estructurada y profesional, el proceso de instalación y configuración de un servidor DNS utilizando **BIND9** en un entorno Ubuntu Server.
 
-[← Volver al índice principal](../Readme.md "Ir al contenido principal")
+📎 [← Volver al índice principal](../Readme.md "Ir al contenido principal")
 
-## Antes de configurar el servidor DNS
+---
 
-Importante: Antes de instalar el servidor DNS, es necesario haber instalado previamente el sistema operativo Ubuntu Server, si aún no lo has hecho, puedes hacerlo siguiendo los pasos descritos en el siguiente enlace:
+## 1. Requisitos Previos
+
+Antes de proceder con la configuración del servidor DNS, es indispensable contar con un sistema operativo Ubuntu Server debidamente instalado.
+
+🔗 Si aún no has realizado este paso, consulta la siguiente guía de preparación del entorno:
 
 * [Pasos previos a la instalación y configuración de los servidores](./preview.md "Primeros pasos antes de la instalación")
 
-## Instalación de los servicios necesarios
+---
 
-Antes de comenzar a configurar el servidor DNS, es necesario instalar los servicios necesarios escribiendo el siguiente comando en la terminal:
+## 2. Instalación de los Servicios DNS
+
+Instala los paquetes necesarios mediante el siguiente comando:
 
 ```bash
 sudo apt install bind9 dnsutils
 ```
 
-## Configuración del servidor DNS
+Este comando instalará:
 
-Después de completar la instalación indicados en el paso anterior, procedemos a configurar el servidor DNS. El primer paso es agregar una zona DNS para el dominio que queremos configurar.
+* **BIND9**: el servicio principal del servidor DNS.
+* **dnsutils**: herramientas útiles como `dig` y `nslookup` para realizar pruebas.
 
-Para ello, escribimos el siguiente comando en la terminal para editar el archivo `named.conf.local`:
+---
+
+## 3. Configuración del Servidor DNS
+
+### 3.1 Definición de la Zona DNS
+
+1. Edita el archivo de configuración de zonas locales:
 
 ```bash
 sudo vi /etc/bind/named.conf.local
 ```
 
-Y luego agregamos la siguiente línea al archivo:
+2. Agrega el siguiente bloque al final del archivo:
 
 ```bash
 zone "daniel-alarmas.com" {
@@ -37,72 +50,104 @@ zone "daniel-alarmas.com" {
 };
 ```
 
-Guardamos el archivo y salimos del editor. Pero para hacerlo, presionamos la tecla `ESC` y luego escribimos `:wq`.
+💡 *Este bloque define que el servidor actuará como maestro para la zona `daniel-alarmas.com` y especifica la ruta del archivo que contendrá los registros DNS.*
 
-### Configuración de la zona DNS
+3. Guarda los cambios y cierra el editor (`:wq` en modo comando de `vi`).
 
-Ahora, procedamos a crear la zona DNS creando el archio `db.daniel-alarmas.com`, pero antes creamos el directorio `zones` en la ruta `/etc/bind/`:
+---
 
-```bash
-sudo mkdir zones
-```
+### 3.2 Creación del Archivo de Zona
 
-Y luego, creamos el archivo `db.daniel-alarmas.com` dentro del directorio `zones`:
+1. Crea el directorio `zones` dentro de `/etc/bind/` si aún no existe:
 
 ```bash
-cd zone;
-touch db.daniel-alarmas.com
+sudo mkdir -p /etc/bind/zones
 ```
 
-Luego de haber creado el archivo, procedamos a abrirlo:
+2. Crea el archivo de la zona DNS:
+
+```bash
+sudo touch /etc/bind/zones/db.daniel-alarmas.com
+```
+
+3. Abre el archivo para editarlo:
 
 ```bash
 sudo vi /etc/bind/zones/db.daniel-alarmas.com
 ```
 
-Y agregue las siguientes líneas en el archivo presionando las teclas `Ctrl` + `Shift` + `V`:
+4. Añade el siguiente contenido:
 
-```bash
+```dns
 $TTL 300
 ; Tiempo de vida (TTL) por defecto de los registros DNS: 300 segundos (5 minutos)
 
 @ IN SOA ns1.daniel-alarmas.com. admin.daniel-alarmas.com. (
-    2025052601 ; Número de serie (formato AAAAMMDDnn — cambia con cada modificación)
-    3600       ; Tiempo de refresco del secundario (1 hora)
-    86400      ; Tiempo de reintento si falla el refresco (24 horas)
-    2419200    ; Tiempo de expiración si no se puede contactar al primario (28 días)
-    300        ; TTL para respuestas negativas (no existe el dominio)
+    2025052601 ; Serial (AAAAMMDDnn — incrementar con cada cambio)
+    3600       ; Refresh (1 hora)
+    86400      ; Retry (24 horas)
+    2419200    ; Expire (28 días)
+    300        ; Negative TTL (5 minutos)
 )
 
 ; -------------------------------------------------------------------------------------
-; Registros principales del dominio daniel-alarmas.com
+; Registros principales de la zona daniel-alarmas.com
 ; -------------------------------------------------------------------------------------
 
-; Dirección IP principal asignada al dominio raíz
-@ IN A 192.168.56.200
-
-; Servidor DNS autorizado (registro NS)
-@ IN NS ns1.daniel-alarmas.com.
+@    IN A     192.168.56.200       ; Dirección IP principal del dominio
+@    IN NS    ns1.daniel-alarmas.com. ; Servidor DNS autorizado
 
 ; -------------------------------------------------------------------------------------
-; Registros A (direcciones IPv4 para subdominios)
+; Registros A: asignación de direcciones IPv4 a subdominios
 ; -------------------------------------------------------------------------------------
 
-; Dirección IP del servidor DNS primario
-ns1 IN A 192.168.56.150
-
-; Subdominio www apuntando a la IP principal del dominio
-www IN A 192.168.56.200
-
-; Subdominio api apuntando a la misma IP que el dominio principal
-api IN A 192.168.56.200
+ns1  IN A     192.168.56.150       ; Dirección del servidor DNS primario
+www  IN A     192.168.56.200       ; Subdominio www apuntando al dominio principal
+api  IN A     192.168.56.200       ; Subdominio API apuntando al dominio principal
 
 ; -------------------------------------------------------------------------------------
-; Registro CNAME (alias)
+; Registros CNAME: alias de subdominios
 ; -------------------------------------------------------------------------------------
 
-; Subdominio tienda redirige a daniel-alarmas.com como alias
-tienda IN CNAME daniel-alarmas.com.
-
+tienda IN CNAME daniel-alarmas.com. ; Alias del subdominio tienda
 ```
 
+---
+
+## 4. Verificación y Recarga del Servicio DNS
+
+1. Verifica la sintaxis de los archivos de configuración:
+
+```bash
+sudo named-checkconf
+sudo named-checkzone daniel-alarmas.com /etc/bind/zones/db.daniel-alarmas.com
+```
+
+2. Recarga el servicio BIND para aplicar los cambios:
+
+```bash
+sudo systemctl restart bind9
+```
+
+3. Habilita el servicio para que se inicie automáticamente al arrancar el sistema:
+
+```bash
+sudo systemctl enable bind9
+```
+
+---
+
+## 5. Pruebas de Funcionamiento
+
+Puedes verificar la correcta resolución del dominio y subdominios usando `dig` o `nslookup`:
+
+```bash
+dig @localhost daniel-alarmas.com
+dig @localhost www.daniel-alarmas.com
+```
+
+---
+
+## ✅ Conclusión
+
+Con esta configuración, tu servidor DNS ya debería estar operativo para resolver peticiones dentro de la red local (o pública, si se habilita). Asegúrate de mantener actualizados los registros de zona conforme evolucione tu infraestructura de red o servicios.
