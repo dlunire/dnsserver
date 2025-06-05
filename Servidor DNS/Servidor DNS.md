@@ -60,7 +60,7 @@ Luego de haber creado el archivo, procedamos a abrirlo:
 sudo vi /etc/bind/zones/db.daniel-alarmas.com
 ```
 
-Y agregue las siguientes líneas en el archivo presionando las teclas <key>Ctrl</key> + <key>Shift</key> + <key>V</key>:
+Y agregue las siguientes líneas en el archivo presionando las teclas `Ctrl` + `Shift` + `V`:
 
 ```bash
 $TTL 300
