@@ -1,6 +1,10 @@
-# Guía de Instalación y Configuración de un Servidor DNS en Ubuntu Server
+Claro, a continuación te presento la **versión mejorada de la guía**, conservando todos los pasos originales pero explicando cada uno con mayor claridad técnica y profesional, especialmente para su presentación ante una institución. Además, he incluido la **configuración de red mediante Netplan**, la cual es indispensable para garantizar que el servidor DNS funcione de manera estable con IP estática.
 
-Esta guía describe, de forma estructurada y profesional, el proceso de instalación y configuración de un servidor DNS utilizando **BIND9** en un entorno Ubuntu Server.
+---
+
+# 🖧 Guía Profesional de Instalación y Configuración de un Servidor DNS con BIND9 en Ubuntu Server
+
+Esta guía detalla paso a paso cómo instalar y configurar un servidor DNS en un entorno Ubuntu Server, utilizando el servicio **BIND9**. Cada paso incluye explicaciones técnicas claras orientadas a entornos educativos o institucionales.
 
 📎 [← Volver al índice principal](../Readme.md "Ir al contenido principal")
 
@@ -8,40 +12,98 @@ Esta guía describe, de forma estructurada y profesional, el proceso de instalac
 
 ## 1. Requisitos Previos
 
-Antes de proceder con la configuración del servidor DNS, es indispensable contar con un sistema operativo Ubuntu Server debidamente instalado.
+Antes de comenzar con la instalación del servidor DNS, se deben cumplir los siguientes requisitos:
 
-🔗 Si aún no has realizado este paso, consulta la siguiente guía de preparación del entorno:
+* Un servidor Ubuntu instalado (preferiblemente una versión LTS como Ubuntu Server 20.04 o 22.04).
+* Acceso administrativo con privilegios `sudo`.
+* Conectividad básica de red funcional.
 
-* [Pasos previos a la instalación y configuración de los servidores](./preview.md "Primeros pasos antes de la instalación")
+👉 Si aún no has preparado el entorno, consulta la guía correspondiente:
+
+🔗 [Pasos previos a la instalación y configuración de los servidores](./preview.md "Primeros pasos antes de la instalación")
 
 ---
 
-## 2. Instalación de los Servicios DNS
+## 2. Configuración de Red con Netplan
 
-Instala los paquetes necesarios mediante el siguiente comando:
+Para garantizar que el servidor DNS sea accesible desde otras máquinas de la red, es necesario asignarle una IP estática en una de sus interfaces. Esto se realiza mediante Netplan, el sistema de configuración de red predeterminado en `Ubuntu Server`.
+
+1. Se abrió el archivo de configuración de `Netplan` (la ruta podría variar en función de la versión de Ubuntu). Se utilizó Ubuntu Server 25.04.
+
+    ```bash
+    sudo vi /etc/netplan/50-cloud-init.yaml
+    ```
+
+2. Sustituye su contenido por el siguiente ejemplo (ajustando a tu red):
+
+    ```yaml
+    network:
+    version: 2
+    renderer: networkd
+    ethernets:
+        enp0s3:
+        dhcp4: true
+        nameservers:
+            addresses: []
+        enp0s8:
+        dhcp4: false
+        addresses:
+            - 192.168.56.150/24
+        nameservers:
+            addresses:
+            - 192.168.56.150
+    ```
+
+> **📌 Notas importantes:**
+> 
+> `enp0s3` debe coincidir con el nombre real de tu interfaz de red conectada a Internet (verifícalo con ip a).
+> 
+> enp0s8 es la interfaz usada para la red interna; se configura con una IP estática (192.168.56.150).
+> 
+> `gateway4` especifica la puerta de enlace predeterminada para el tráfico saliente.
+> 
+> `nameservers.addresses` incluye la IP del propio **servidor DNS**.
+
+
+3. Aplica la configuración:
 
 ```bash
+sudo netplan apply
+```
+
+4. Verifica que la IP esté correctamente asignada:
+
+```bash
+ip a
+```
+
+## 3. Instalación de los Servicios DNS
+
+Procede a instalar los paquetes necesarios para que el servidor DNS funcione:
+
+```bash
+sudo apt update
 sudo apt install bind9 dnsutils
 ```
 
-Este comando instalará:
+🔍 **Explicación**:
 
-* **BIND9**: el servicio principal del servidor DNS.
-* **dnsutils**: herramientas útiles como `dig` y `nslookup` para realizar pruebas.
+* `bind9`: es el servidor DNS ampliamente utilizado en entornos Linux.
+* `dnsutils`: contiene herramientas útiles como `dig` y `nslookup` para pruebas DNS.
 
 ---
 
-## 3. Configuración del Servidor DNS
+## 4. Configuración del Servidor DNS
 
-### 3.1 Definición de la Zona DNS
+### 4.1 Definición de la Zona DNS
 
-1. Edita el archivo de configuración de zonas locales:
+Para definir una zona DNS propia (por ejemplo, `daniel-alarmas.com`), se edita el archivo de configuración local de BIND:
 
 ```bash
 sudo vi /etc/bind/named.conf.local
 ```
 
-2. Agrega el siguiente bloque al final del archivo:
+Agrega al final:
 
 ```bash
 zone "daniel-alarmas.com" {
@@ -50,104 +112,116 @@ zone "daniel-alarmas.com" {
 };
 ```
 
-💡 *Este bloque define que el servidor actuará como maestro para la zona `daniel-alarmas.com` y especifica la ruta del archivo que contendrá los registros DNS.*
+📌 **Explicación**:
 
-3. Guarda los cambios y cierra el editor (`:wq` en modo comando de `vi`).
+* `type master`: indica que este servidor es el autoritativo para la zona.
+* `file`: ruta del archivo que contendrá los registros DNS de esta zona.
 
----
-
-### 3.2 Creación del Archivo de Zona
-
-1. Crea el directorio `zones` dentro de `/etc/bind/` si aún no existe:
-
-```bash
-sudo mkdir -p /etc/bind/zones
-```
-
-2. Crea el archivo de la zona DNS:
-
-```bash
-sudo touch /etc/bind/zones/db.daniel-alarmas.com
-```
-
-3. Abre el archivo para editarlo:
-
-```bash
-sudo vi /etc/bind/zones/db.daniel-alarmas.com
-```
-
-4. Añade el siguiente contenido:
-
-```dns
-$TTL 300
-; Tiempo de vida (TTL) por defecto de los registros DNS: 300 segundos (5 minutos)
-
-@ IN SOA ns1.daniel-alarmas.com. admin.daniel-alarmas.com. (
-    2025052601 ; Serial (AAAAMMDDnn — incrementar con cada cambio)
-    3600       ; Refresh (1 hora)
-    86400      ; Retry (24 horas)
-    2419200    ; Expire (28 días)
-    300        ; Negative TTL (5 minutos)
-)
-
-; -------------------------------------------------------------------------------------
-; Registros principales de la zona daniel-alarmas.com
-; -------------------------------------------------------------------------------------
-
-@    IN A     192.168.56.200       ; Dirección IP principal del dominio
-@    IN NS    ns1.daniel-alarmas.com. ; Servidor DNS autorizado
-
-; -------------------------------------------------------------------------------------
-; Registros A: asignación de direcciones IPv4 a subdominios
-; -------------------------------------------------------------------------------------
-
-ns1  IN A     192.168.56.150       ; Dirección del servidor DNS primario
-www  IN A     192.168.56.200       ; Subdominio www apuntando al dominio principal
-api  IN A     192.168.56.200       ; Subdominio API apuntando al dominio principal
-
-; -------------------------------------------------------------------------------------
-; Registros CNAME: alias de subdominios
-; -------------------------------------------------------------------------------------
-
-tienda IN CNAME daniel-alarmas.com. ; Alias del subdominio tienda
-```
+Luego, se guardó y cerró el archivo presionando `ESC` y luego, escribiendo esto: `:qw`
 
 ---
 
-## 4. Verificación y Recarga del Servicio DNS
+### 4.2 Creación del Archivo de Zona
 
-1. Verifica la sintaxis de los archivos de configuración:
+1. Se creó el directorio donde se almacenarán los archivos de zona, si no existe:
+
+    ```bash
+    sudo mkdir -p /etc/bind/zones
+    ```
+
+2. Y luego se creó el archivo de zona:
+
+    ```bash
+    sudo touch /etc/bind/zones/db.daniel-alarmas.com
+    ```
+
+3. Se abrió para editarlo:
+
+    ```bash
+    sudo vi /etc/bind/zones/db.daniel-alarmas.com
+    ```
+
+4. Y se insertó el siguiente contenido:
+
+    ```dns
+    $TTL 300
+    @ IN SOA ns1.daniel-alarmas.com. admin.daniel-alarmas.com. (
+        2025052601 ; Serial: formato AAAAMMDDnn, debe incrementarse con cada cambio
+        3600       ; Refresh: cada cuánto tiempo un servidor esclavo debe consultar cambios
+        86400      ; Retry: espera en caso de fallo al contactar con el maestro
+        2419200    ; Expire: tiempo que mantiene datos válidos sin contacto
+        300        ; Negative TTL: tiempo para respuestas negativas
+    )
+
+    ; ------------------------- Registros de zona -------------------------
+
+    @    IN A     192.168.56.200           ; Dirección IP principal del dominio
+    @    IN NS    ns1.daniel-alarmas.com. ; Servidor de nombres para la zona
+
+    ; ---------- Registros A (IPv4) ----------
+
+    ns1  IN A     192.168.56.150           ; Dirección del servidor DNS
+    www  IN A     192.168.56.200           ; Subdominio www
+    api  IN A     192.168.56.200           ; Subdominio API
+
+    ; ---------- Registros CNAME (alias) ----------
+
+    tienda IN CNAME daniel-alarmas.com.   ; Alias para tienda
+    ```
+
+📌 **Notas importantes**:
+
+* `@` representa el nombre base de la zona (`daniel-alarmas.com`).
+* `SOA` (Start of Authority) contiene información crítica de sincronización.
+* Todos los registros deben finalizar con punto (`.`) si están completamente calificados.
+
+
+## 5. Verificación y Recarga del Servicio DNS
+
+1. Se verificó que los archivos de configuración no tengan errores de sintaxis:
 
 ```bash
 sudo named-checkconf
 sudo named-checkzone daniel-alarmas.com /etc/bind/zones/db.daniel-alarmas.com
 ```
 
-2. Recarga el servicio BIND para aplicar los cambios:
+2. Se comprobó que no hubo errores, se reinició el servicio BIND para aplicar los cambios:
 
 ```bash
 sudo systemctl restart bind9
 ```
 
-3. Habilita el servicio para que se inicie automáticamente al arrancar el sistema:
+3. Se aseguró que BIND se inició automáticamente con el sistema:
 
 ```bash
 sudo systemctl enable bind9
 ```
 
----
+## 6. Pruebas de Funcionamiento
 
-## 5. Pruebas de Funcionamiento
-
-Puedes verificar la correcta resolución del dominio y subdominios usando `dig` o `nslookup`:
+Se probó la configuración configuración y resolución de nombres por medio de los siguientes comandos:
 
 ```bash
 dig @localhost daniel-alarmas.com
 dig @localhost www.daniel-alarmas.com
 ```
 
----
+📌 **Consejo**: Si obtienes una respuesta con las direcciones IP configuradas, la resolución está funcionando correctamente. También puedes usar `nslookup`.
 
 ## ✅ Conclusión
 
-Con esta configuración, tu servidor DNS ya debería estar operativo para resolver peticiones dentro de la red local (o pública, si se habilita). Asegúrate de mantener actualizados los registros de zona conforme evolucione tu infraestructura de red o servicios.
+Con estos pasos finalizados, el servidor DNS con `BIND9` queda correctamente configurado y operativo. Esta configuración permite resolver nombres dentro de la red local, y está preparada para escalabilidad y mantenimiento continuo. Se recomienda:
+
+* Mantener el número de serie actualizado en cada modificación de la zona.
+* Verificar regularmente los registros mediante `named-checkzone`.
+* Realizar respaldos periódicos de los archivos de zona.
+
+<br>
+
+> ⚠️ IMPORTANTE
+> 
+> Durante la fase de desarrollo, el valor TTL (Time to Live) se configuró en 300 segundos (5 minutos) con el objetivo de permitir una propagación rápida de los cambios en los registros DNS.
+> 
+> Esta configuración fue útil para facilitar pruebas frecuentes. Sin embargo, en un entorno de producción se recomienda establecer un TTL más alto para mejorar la eficiencia del sistema y reducir la carga en los resolvers.
+> 
+> Por convención, suele utilizarse un valor de 604800 segundos (equivalente a una semana) en producción, a menos que se justifique otra política de caché.
