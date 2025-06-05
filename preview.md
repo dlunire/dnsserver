@@ -34,3 +34,29 @@ Ahora que has instalado el software de virtualización siguiendo los pasos anter
 
 ### Creación de la máquina virtual «**`Servidor DNS`**»
 
+Debemos seguir las instrucciones que indican el paso a paso de cómo crear la máquina virtual
+
+- Paso 1: Abrimos VirtualBox y hacemos clic en `Nueva`.
+    ![](./images/new.png "Vista previa")
+
+- Paso 2: Rellene el formulario correspondiente. No seleccione ninguna imagen (ISO del SO). Los campos deben contener los siguientes datos:
+    - **Nombre:** Servidor DNS (o si prefiere otro que haga referencia conceptualmente al servidor DNS).
+    - **Carpeta:** /home/usuario/VirtualBox VMs. Puede dejar ese campo tal cual debe estar.
+    - **Edición:** No cargue ninguna imagen aquí. Déjelo en blanco.
+    - **Versión:** Ubuntu (64-bit). Dado que estamos utilizando Ubuntu Server como sistema operativo de servidor.
+    ![Vista Previa](./images/server-name.png "Primer formulario")
+
+    Presione «Siguiente»
+
+- Paso 3: Asigne los recursos necesarios
+    ![Vista previa - Recursos](./images/server-name-assign.png "Asignar memoria y procesador")
+
+    Presione «Siguiente»
+
+- Paso 4: Asigne el amacenamiento adecuado
+    ![Asignación de almacenamiento](./images/server-name-storage-assign.png "Asignación de capacidad de almacenamiento en el disco virtual).
+
+    Presiones «Siguiente» y luego en «Terminar»
+
+- Paso 5: Asigne la imagen de disco (ISO del Sistema Operativo) a la máquina virtual
+    ![Asignación de ISO para la instalación del sistema operativo]()
