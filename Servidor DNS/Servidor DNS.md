@@ -57,15 +57,15 @@ Para garantizar que el servidor DNS sea accesible desde otras máquinas de la re
 
 3. Aplica la configuración:
 
-```bash
-sudo netplan apply
-```
+    ```bash
+    sudo netplan apply
+    ```
 
 4. Verifica que la IP esté correctamente asignada:
 
-```bash
-ip a
-```
+    ```bash
+    ip a
+    ```
 
 ## 3. Instalación de los Servicios DNS
 
@@ -78,7 +78,7 @@ sudo apt install bind9 dnsutils
 
 🔍 **Explicación**:
 
-* `bind9`: es el servidor DNS ampliamente utilizado en entornos Linux.
+* `bind9`: es el servidor DNS ampliamente utilizado en entornos `Linux`.
 * `dnsutils`: contiene herramientas útiles como `dig` y `nslookup` para pruebas DNS.
 
 ---
@@ -87,13 +87,13 @@ sudo apt install bind9 dnsutils
 
 ### 4.1 Definición de la Zona DNS
 
-Para definir una zona DNS propia (por ejemplo, `daniel-alarmas.com`), se edita el archivo de configuración local de BIND:
+Para definir una zona DNS propia (por ejemplo, `daniel-alarmas.com`), se editó el archivo de configuración local de BIND:
 
 ```bash
 sudo vi /etc/bind/named.conf.local
 ```
 
-Agrega al final:
+Y luego se agregó estas estas líneas para definir la zona DNS:
 
 ```bash
 zone "daniel-alarmas.com" {
@@ -109,17 +109,15 @@ zone "daniel-alarmas.com" {
 
 Luego, se guardó y cerró el archivo presionando `ESC` y luego, escribiendo esto: `:qw`
 
----
-
 ### 4.2 Creación del Archivo de Zona
 
-1. Se creó el directorio donde se almacenarán los archivos de zona, si no existe:
+1. Se creó el directorio donde se almacenaron los archivos de zona:
 
     ```bash
     sudo mkdir -p /etc/bind/zones
     ```
 
-2. Y luego se creó el archivo de zona:
+2. Y luego se creó el archivo de zona por medio del comando `touch`:
 
     ```bash
     sudo touch /etc/bind/zones/db.daniel-alarmas.com
@@ -131,7 +129,7 @@ Luego, se guardó y cerró el archivo presionando `ESC` y luego, escribiendo est
     sudo vi /etc/bind/zones/db.daniel-alarmas.com
     ```
 
-4. Y se insertó el siguiente contenido:
+4. Y se insertó el siguiente contenido, que es el contenido del registro DNS, donde se definieron, el dominio principal, subdominios y alias:
 
     ```dns
     $TTL 300
